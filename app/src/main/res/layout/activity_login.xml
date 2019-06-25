@@ -7,16 +7,20 @@
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
-    <TextView
-        android:id="@+id/userName"
+    <EditText
+        android:id="@+id/userNameText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
         android:text="Username" />
 
-    <TextView
-        android:id="@+id/Password"
+    <EditText
+        android:id="@+id/passwordText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName|textPassword"
         android:text="Password" />
 
     <Button

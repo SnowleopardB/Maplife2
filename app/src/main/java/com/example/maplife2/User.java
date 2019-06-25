@@ -13,7 +13,7 @@ public class User implements Serializable {
     private ArrayList<Friend> friends;
 
 
-    public User(int aID, String aPassword, String aName, String aEmail, ArrayList<Location> aLocations, ArrayList<Friend> aFriends) {
+    public User(int aID, String aEmail, String aName, String aPassword, ArrayList<Location> aLocations, ArrayList<Friend> aFriends) {
 
         this.id = aID;
         this.password = aPassword;

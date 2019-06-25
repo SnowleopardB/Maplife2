@@ -7,9 +7,23 @@
     android:orientation="vertical"
     tools:context=".FriendsViewActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom|end"
+        android:layout_weight="5"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@android:drawable/alert_dark_frame" />
+
     <GridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="1" />
+        android:numColumns="1" >
+
+    </GridView>
+
+
 </LinearLayout>

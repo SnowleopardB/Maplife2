@@ -1,8 +1,15 @@
 package com.example.maplife2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -10,35 +17,22 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationGetRequest.Callback{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
 //    private User currentUser;
 
-    @Override
-    public void gotLocations(ArrayList<Location> locationArrayList) {
-        Toast.makeText(this, "waw" + String.valueOf(locationArrayList), Toast.LENGTH_SHORT).show();
-        LatLng positionone = new LatLng(120, 150.99999);
-        mMap.addMarker(new MarkerOptions().position(positionone).title("Marker in Sydney"));
-//mMap.addMarker()
-    }
-
-    @Override
-    public void gotLocationsError(String message) {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("map");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-//        Intent intent = getIntent();
-//        currentUser = (User) intent.getSerializableExtra("user");
         Toast.makeText(this, "waw" + String.valueOf(MainActivity.currentUser), Toast.LENGTH_SHORT).show();
 
 
@@ -69,13 +63,71 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             for (int i = 0; i < locationlist.size(); i++) {
                 Location location = locationlist.get(i);
-                LatLng thislocation = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(thislocation).title(location.getName()));
+                LatLng thislocation = new LatLng(Double.valueOf(location.getLatitude()), Double.valueOf(location.getLongitude()));
+                MarkerOptions marker = new MarkerOptions().position(thislocation).title(location.getName());
+                mMap.addMarker(marker);
             }
-            // Add a marker in Sydney and move the camera
-            LatLng sydney = new LatLng(-34.500, 150.99999);
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            mMap.setOnMarkerClickListener(this);
         }
+    }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        // Retrieve the data from the marker.
+        Integer clickCount = (Integer) marker.getTag();
+        Toast.makeText(this, marker.getTitle() + " has been clicked " + clickCount + " times.", Toast.LENGTH_SHORT).show();
+        showLocationInfo();
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
+    }
+
+    public void showLocationInfo() {
+        // Create alertDialog with a textEdit for user to give his name.
+
+
+        AlertDialog.Builder giveInfo = new AlertDialog.Builder(MapsActivity.this);
+
+        giveInfo.setTitle("Place Info")
+                .setView(R.layout.dialog_location_view)
+                .setCancelable(false);
+
+        giveInfo.setPositiveButton("Back", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                TextView name = findViewById(R.id.nameText);
+                TextView description = findViewById(R.id.descriptionText);
+                TextView user = findViewById(R.id.userText);
+                name.setText("waw");
+                description.setText("waw2");
+                user.setText("waw3");
+            }
+        });
+        giveInfo.show();
     }
 }
+
+
+
+
+
+
+//    private class GridItemClickListener implements AdapterView.OnItemClickListener {
+//
+//        @Override
+//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            Friend clickedFriend = (Friend) parent.getItemAtPosition(position);
+//            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+//            intent.putExtra("clicked_friend", clickedFriend);
+//            startActivity(intent);
+//            // setContentView(R.layout.activity_profile);
+//
+//            // does not seem to get here, question
+//            Log.d("allright", "waw" + clickedFriend);
+//        }
+

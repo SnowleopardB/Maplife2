@@ -27,8 +27,6 @@ public class FriendsViewActivity extends AppCompatActivity {
         try {
             JSONArray JSONfriend = new JSONArray(jsonified);
 
-            friends.add(new Friend(1, "Koen"));
-
             for (int i=0; i <JSONfriend.length(); i++) {
                 JSONObject friendobject = JSONfriend.getJSONObject(i);
 

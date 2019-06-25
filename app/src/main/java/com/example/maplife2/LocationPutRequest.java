@@ -20,14 +20,17 @@ import java.util.Map;
 
 public class LocationPutRequest implements Response.Listener, Response.ErrorListener {
 
-    private ArrayList<Location> locations;
+    private int userid;
     private Context context;
+    private ArrayList<Location> locations;
     private Callback callback;
 
-    public LocationPutRequest(AddLocationActivity aContext, ArrayList<Location> aLocations) {
 
-        locations = aLocations;
+    public LocationPutRequest(AddLocationActivity aContext, int userID, ArrayList<Location> aLocations) {
+
+        userid = userID;
         context = (Context) aContext;
+        locations = aLocations;
 
     }
     public interface Callback {
@@ -53,8 +56,8 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
             JSONArray JSONlocations = new JSONArray(json);
             for (int i = 0; i < JSONlocations.length(); i++) {
                 JSONObject onelocation = JSONlocations.getJSONObject(i);
-                Long latitude = onelocation.getLong("latitude");
-                Long longitude = onelocation.getLong("longitude");
+                String latitude = onelocation.getString("latitude");
+                String longitude = onelocation.getString("longitude");
                 String name = onelocation.getString("name");
                 String description = onelocation.getString("description");
                 Location location = new Location(latitude, longitude, name, description);
@@ -89,11 +92,12 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
         }
     }
 
-    public void postLocation(Callback activity, User user) {
+    public void postLocation(Callback activity) {
 
         callback = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "https://ide50-bart1997.c9users.io:8080/Maplife2/10";
+        int number = userid;
+        String url = "https://ide50-bart1997.c9users.io:8080/Maplife6/" + number;
         ActualPostRequest postRequest = new ActualPostRequest(Request.Method.PUT, url, this, this);
         queue.add(postRequest);
     }

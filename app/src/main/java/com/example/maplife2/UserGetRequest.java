@@ -22,15 +22,15 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
 
     public static final String TAG = "LocationRequest";
 
-    public UserGetRequest(Context context) {
+    public UserGetRequest(Context context, int userID) {
         context2 = context;
     }
 
-    public void getUser(MainActivity activity) {
+    public void getUser(MainActivity activity, int userID) {
 
         callback2 = activity;
-        String number = "14";
-        String url = "https://ide50-bart1997.legacy.cs50.io:8080/Maplife2/" +number;
+        String number = String.valueOf(userID);
+        String url = "https://ide50-bart1997.legacy.cs50.io:8080/Maplife6/" +number;
         RequestQueue queue = Volley.newRequestQueue(context2);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, this, this);
         queue.add(jsonObjectRequest);
@@ -69,8 +69,8 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
                 JSONObject location = test.getJSONObject(i);
 
                 Location loc = new Location(
-                        location.getLong("latitude"),
-                        location.getLong("longitude"),
+                        location.getString("latitude"),
+                        location.getString("longitude"),
                         location.getString("name"),
                         location.getString("description")
                 );
@@ -82,7 +82,7 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
             JSONArray JSONfriend = new JSONArray(friends);
 
 
-            friendsarraylist.add(new Friend(1, "Koen"));
+//            friendsarraylist.add(new Friend(1, "Koen"));
 
             for (int i=0; i <JSONfriend.length(); i++) {
                 JSONObject friendobject = JSONfriend.getJSONObject(i);
@@ -96,7 +96,7 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
             }
 
 
-            User user = new User(ID, password, name, email, locationsarraylist, friendsarraylist);
+            User user = new User(ID, email, name, password, locationsarraylist, friendsarraylist);
             callback2.gotUser(user);
             Log.d(TAG, "currentuser " + user);
 

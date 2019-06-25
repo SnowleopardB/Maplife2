@@ -1,9 +1,12 @@
 package com.example.maplife2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -14,12 +17,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-public class AddLocationActivity extends AppCompatActivity implements LocationPutRequest.Callback, OnMapReadyCallback{
+public class AddLocationActivity extends AppCompatActivity implements LocationPutRequest.Callback, OnMapReadyCallback {
 
     private GoogleMap mMap;
     ArrayList<Location> locations = new ArrayList<>();
-
+    private String latitude;
+    private String longitude;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("add location");
@@ -29,7 +34,6 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
 
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
-
 
 
 //        LocationGetRequestForAdd req = new LocationGetRequestForAdd( this);
@@ -49,7 +53,12 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
 
     @Override
     public void postedLocationsError(String message) {
+        Log.d("waaw", "whoops");
+    }
 
+    public void postLocation() {
+        LocationPutRequest request = new LocationPutRequest(this, 1, locations);
+        request.postLocation(this);
     }
 
     @Override
@@ -60,26 +69,27 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
         mMap.setOnMapLongClickListener(onclick);
 
         locations = user.getLocations();
-        Location loc = new Location(-34, 150, "Starbucks", "waaw");
+        Location loc = new Location("-34", "150", "Starbucks", "waaw");
         locations.add(loc);
 
         for (int i = 0; i < locations.size(); i++) {
             Log.d("maploc", "onMapReady: " + i);
-            Log.d("maploc", "onMapReady: " + loc.getName() );
+            Log.d("maploc", "onMapReady: " + loc.getName());
             Location location = locations.get(i);
-            LatLng thislocation = new LatLng(location.getLatitude(), location.getLongitude());
+            double lat = Double.valueOf(location.getLatitude());
+            double longit = Double.valueOf(location.getLongitude());
+            LatLng thislocation = new LatLng(lat, longit);
             mMap.addMarker(new MarkerOptions().position(thislocation).title(location.getName()));
         }
 
-            // Add a marker in Sydney and move the camera
+        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34.500, 150.99999);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 
 
-
     }
 
-    private class onMapClicklistener implements GoogleMap.OnMapLongClickListener{
+    private class onMapClicklistener implements GoogleMap.OnMapLongClickListener {
 
         @Override
         public void onMapLongClick(LatLng point) {
@@ -88,12 +98,97 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
                     .position(point)
                     .title(point.toString()));
 
+            String coordinates = point.toString();
+            Log.d("waw1", "point" + point);
+            String[] latlong = coordinates.split(",");
+            Log.d("waw", "latlong" + latlong);
+            String[] lat = latlong[0].split("\\(");
+            String[] longit = latlong[1].split("\\)");
+            latitude = String.valueOf(lat[1]);
+            longitude = String.valueOf(longit[0]);
+            Log.d("aw", "latitude longitude" + String.valueOf(latitude) + String.valueOf(longitude));
             Toast.makeText(getApplicationContext(),
                     "New marker added@" + point.toString(), Toast.LENGTH_LONG)
                     .show();
-
+            getNameAndDescription();
         }
     }
 
+    public void getNameAndDescription() {
+        // Create alertDialog with a textEdit for user to give his name.
 
+        final String[] name = new String[1];
+        final String[] description = new String[1];
+        final EditText nameEdit = new EditText(this);
+        final EditText descriptionEdit = new EditText(this);
+
+
+        AlertDialog.Builder giveName = new AlertDialog.Builder(AddLocationActivity.this);
+
+        giveName.setTitle("name and description")
+                .setView(R.layout.dialog_location)
+                .setCancelable(false);
+
+        giveName.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                EditText name = findViewById(R.id.nameEdit);
+                EditText description = findViewById(R.id.descriptionEdit);
+                String stringName = "waw";
+//                        String.valueOf(name.getText());
+                String stringDescription = "waw";
+//                String.valueOf(description.getText());
+
+                Location newLocation = new Location(latitude, longitude, stringName, stringDescription);
+                ArrayList<Location> locationlist = user.getLocations();
+                locationlist.add(newLocation);
+                postLocation();
+
+                // Create an intent to HighscoreActivity and include Highscore object.
+                Intent intent = new Intent(AddLocationActivity.this, MainActivity.class);
+                intent.putExtra("loggedinID", user.getId());
+                intent.putExtra("loggedinCheck", 1);
+                startActivity(intent);
+
+            }
+        });
+        giveName.show();
+    }
 }
+
+//        giveDescription.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//
+//            @Override
+//
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//
+//
+//                Location newLocation = new Location(latitude, longitude, String.valueOf(name[0]), String.valueOf(description[0]));
+//                ArrayList<Location> locationlist = user.getLocations();
+//                locationlist.add(newLocation);
+////                user.setLocations(locationlist);
+//                postLocation();
+//
+//                // Create an intent to HighscoreActivity and include Highscore object.
+//                Intent scoreIntent = new Intent(AddLocationActivity.this, MainActivity.class);
+////                scoreIntent.putExtra("totalScore", totalScore2);
+////                scoreIntent.putExtra("name", name2);
+//                startActivity(scoreIntent);
+//
+//            }
+//        });
+//        giveDescription.show();
+
+//        Location newLocation = new Location(latitude, longitude, String.valueOf(name[0]), String.valueOf(description[0]));
+//        ArrayList<Location> locationlist = user.getLocations();
+//        locationlist.add(newLocation);
+////                user.setLocations(locationlist);
+//        postLocation();
+
+
+
+
+
