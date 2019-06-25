@@ -111,23 +111,3 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         giveInfo.show();
     }
 }
-
-
-
-
-
-
-//    private class GridItemClickListener implements AdapterView.OnItemClickListener {
-//
-//        @Override
-//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            Friend clickedFriend = (Friend) parent.getItemAtPosition(position);
-//            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-//            intent.putExtra("clicked_friend", clickedFriend);
-//            startActivity(intent);
-//            // setContentView(R.layout.activity_profile);
-//
-//            // does not seem to get here, question
-//            Log.d("allright", "waw" + clickedFriend);
-//        }
-

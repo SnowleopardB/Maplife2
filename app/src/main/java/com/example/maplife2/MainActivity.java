@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
         Intent intent = getIntent();
         userID = (int) intent.getSerializableExtra("loggedinID");
         logginCheck = (int) intent.getSerializableExtra("loggedinCheck");
+        Log.d("userID", String.valueOf(userID));
         if (logginCheck != 1) {
             Intent noLoginIntent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(noLoginIntent);

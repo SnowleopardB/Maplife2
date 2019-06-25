@@ -45,11 +45,12 @@ public class LoginActivity extends AppCompatActivity implements LoginDataGetRequ
 
         loginPassword = String.valueOf(password.getText());
 
+//        Toast.makeText(this, tempUsername, Toast.LENGTH_LONG).show();
+
         for (int i = 0; i < loginData.size(); i++){
 
             User tempUser = loginData.get(i);
             String tempUsername = tempUser.getName();
-            Toast.makeText(this, tempUsername, Toast.LENGTH_LONG).show();
             Log.d("loginwaaaw", tempUsername);
             if (loginUsername.equals(tempUsername)){
                 String tempUserpassword = tempUser.getPassword();
@@ -77,5 +78,9 @@ public class LoginActivity extends AppCompatActivity implements LoginDataGetRequ
     @Override
     public void gotLoginDataError(String message) {
 
+    }
+
+    public void onBackPressed() {
+        // Not able to go back after login
     }
 }

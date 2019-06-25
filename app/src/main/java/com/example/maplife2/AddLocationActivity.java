@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -48,7 +50,6 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
     public void postedLocations(ArrayList<Location> LocationArraylist) {
 
         Log.d("waw", "postedLocations: HET IS GELUKT ");
-
     }
 
     @Override
@@ -57,7 +58,7 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
     }
 
     public void postLocation() {
-        LocationPutRequest request = new LocationPutRequest(this, 1, locations);
+        LocationPutRequest request = new LocationPutRequest(this, user.getId(), locations);
         request.postLocation(this);
     }
 
@@ -69,12 +70,8 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
         mMap.setOnMapLongClickListener(onclick);
 
         locations = user.getLocations();
-        Location loc = new Location("-34", "150", "Starbucks", "waaw");
-        locations.add(loc);
 
         for (int i = 0; i < locations.size(); i++) {
-            Log.d("maploc", "onMapReady: " + i);
-            Log.d("maploc", "onMapReady: " + loc.getName());
             Location location = locations.get(i);
             double lat = Double.valueOf(location.getLatitude());
             double longit = Double.valueOf(location.getLongitude());
@@ -125,8 +122,11 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
 
         AlertDialog.Builder giveName = new AlertDialog.Builder(AddLocationActivity.this);
 
+        LayoutInflater layoutinflater = LayoutInflater.from(AddLocationActivity.this);
+        final View view = layoutinflater.inflate(R.layout.dialog_location, null);
+
         giveName.setTitle("name and description")
-                .setView(R.layout.dialog_location)
+                .setView(view)
                 .setCancelable(false);
 
         giveName.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -134,12 +134,10 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                EditText name = findViewById(R.id.nameEdit);
-                EditText description = findViewById(R.id.descriptionEdit);
-                String stringName = "waw";
-//                        String.valueOf(name.getText());
-                String stringDescription = "waw";
-//                String.valueOf(description.getText());
+                EditText name = view.findViewById(R.id.nameEdit);
+                EditText description = view.findViewById(R.id.descriptionEdit);
+                String stringName = String.valueOf(name.getText());
+                String stringDescription = String.valueOf(description.getText());
 
                 Location newLocation = new Location(latitude, longitude, stringName, stringDescription);
                 ArrayList<Location> locationlist = user.getLocations();
@@ -157,36 +155,6 @@ public class AddLocationActivity extends AppCompatActivity implements LocationPu
         giveName.show();
     }
 }
-
-//        giveDescription.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//
-//            @Override
-//
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//
-//
-//                Location newLocation = new Location(latitude, longitude, String.valueOf(name[0]), String.valueOf(description[0]));
-//                ArrayList<Location> locationlist = user.getLocations();
-//                locationlist.add(newLocation);
-////                user.setLocations(locationlist);
-//                postLocation();
-//
-//                // Create an intent to HighscoreActivity and include Highscore object.
-//                Intent scoreIntent = new Intent(AddLocationActivity.this, MainActivity.class);
-////                scoreIntent.putExtra("totalScore", totalScore2);
-////                scoreIntent.putExtra("name", name2);
-//                startActivity(scoreIntent);
-//
-//            }
-//        });
-//        giveDescription.show();
-
-//        Location newLocation = new Location(latitude, longitude, String.valueOf(name[0]), String.valueOf(description[0]));
-//        ArrayList<Location> locationlist = user.getLocations();
-//        locationlist.add(newLocation);
-////                user.setLocations(locationlist);
-//        postLocation();
 
 
 
