@@ -28,6 +28,13 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
 
         TextView name = convertView.findViewById(R.id.friendName);
         name.setText(current_friend.getName());
+        ImageView image = convertView.findViewById(R.id.friendImage);
+
+//        int photoID = (int) getResources().getIdentifier(friendsnames[i].toLowerCase(), "drawable", getPackageName());
+//
+//        image.set
+
+
 
 
         return convertView;

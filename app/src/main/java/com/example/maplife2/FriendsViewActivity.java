@@ -3,6 +3,8 @@ package com.example.maplife2;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 
 public class FriendsViewActivity extends AppCompatActivity {
 
+    int userID = 0;
     ArrayList<Friend> friends = new ArrayList<>();
 
     @Override
@@ -22,6 +25,7 @@ public class FriendsViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friends_view);
 
         Intent intent = getIntent();
+        userID = (int) intent.getSerializableExtra("id");
         String jsonified = intent.getStringExtra("friends");
 
         try {
@@ -46,6 +50,34 @@ public class FriendsViewActivity extends AppCompatActivity {
         GridView grid_view = findViewById(R.id.gridview);
         grid_view.setAdapter(adapter);
 
+        FriendsViewActivity.GridItemClickListener onclick = new FriendsViewActivity.GridItemClickListener();
+        grid_view.setOnItemClickListener(onclick);
+    }
+
+    public void floatingbuttonOnClick(View view) {
+        Intent intent = new Intent(FriendsViewActivity.this, AddFriendsActivity.class);
+        intent.putExtra("friends", friends.toString());
+        intent.putExtra("id", userID);
+        startActivity(intent);
 
     }
+
+    public void onBackPressed() {
+        Intent intent = new Intent(FriendsViewActivity.this, MainActivity.class);
+        intent.putExtra("loggedinID", userID);
+        intent.putExtra("loggedinCheck", 1);
+        startActivity(intent);
+    }
+
+    private class GridItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final Friend clickedFriend = (Friend) parent.getItemAtPosition(position);
+            Intent intent = new Intent(FriendsViewActivity.this, FriendMapsActivity.class);
+            intent.putExtra("friendID", clickedFriend.getId());
+            startActivity(intent);
+        }
+    }
+
 }

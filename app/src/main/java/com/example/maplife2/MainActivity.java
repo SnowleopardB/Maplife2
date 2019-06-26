@@ -77,11 +77,14 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+        Log.d("huh", "onNavigationItemSelected: " + currentUser.getFriends().toString());
         switch (menuItem.getItemId()) {
             case R.id.nav_friends:
                 Intent intent = new Intent(MainActivity.this, FriendsViewActivity.class);
                 ArrayList<Friend> friends = currentUser.getFriends();
                 intent.putExtra("friends", friends.toString());
+                intent.putExtra("id", userID);
                 startActivity(intent);
                 break;
             case R.id.nav_location:
@@ -93,10 +96,17 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
                 Intent intentlogout = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intentlogout);
                 break;
-            case R.id.nav_add:
-                Intent intentadd = new Intent(MainActivity.this, AddChooseActivity.class);
-                intentadd.putExtra("user", currentUser);
-                startActivity(intentadd);
+            case R.id.nav_add_location:
+                Intent intentaddlocation = new Intent(MainActivity.this, AddLocationActivity.class);
+                intentaddlocation.putExtra("user", currentUser);
+                startActivity(intentaddlocation);
+                break;
+            case R.id.nav_add_friend:
+                Intent intentaddfriend = new Intent(MainActivity.this, AddFriendsActivity.class);
+                ArrayList<Friend> friends1 = currentUser.getFriends();
+                intentaddfriend.putExtra("friends", friends1.toString());
+                intentaddfriend.putExtra("id", userID);
+                startActivity(intentaddfriend);
                 break;
         }
         return true;

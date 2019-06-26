@@ -15,9 +15,13 @@
             android:icon="@drawable/ic_location"
             android:title="locations"/>
 
-        <item android:id="@+id/nav_add"
-            android:icon="@drawable/ic_add"
-            android:title="Add friend or location" />
+        <item android:id="@+id/nav_add_friend"
+            android:icon="@drawable/ic_add_friend"
+            android:title="Add friend" />
+
+        <item android:id="@+id/nav_add_location"
+            android:icon="@drawable/ic_add_location"
+            android:title="Add location"/>
 
         <item android:id="@+id/nav_account"
             android:icon="@drawable/ic_account"
@@ -29,7 +33,5 @@
 
 
     </group>
-
-
 
 </menu>

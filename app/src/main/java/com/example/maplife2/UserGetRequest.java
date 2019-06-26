@@ -26,7 +26,7 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
         context2 = context;
     }
 
-    public void getUser(MainActivity activity, int userID) {
+    public void getUser(Callback activity, int userID) {
 
         callback2 = activity;
         String number = String.valueOf(userID);
@@ -80,9 +80,6 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
 
             String friends = response.getString("friends");
             JSONArray JSONfriend = new JSONArray(friends);
-
-
-//            friendsarraylist.add(new Friend(1, "Koen"));
 
             for (int i=0; i <JSONfriend.length(); i++) {
                 JSONObject friendobject = JSONfriend.getJSONObject(i);
