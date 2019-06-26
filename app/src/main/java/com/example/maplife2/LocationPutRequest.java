@@ -1,7 +1,6 @@
 package com.example.maplife2;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,6 +19,7 @@ import java.util.Map;
 
 public class LocationPutRequest implements Response.Listener, Response.ErrorListener {
 
+    // define global variables
     private int userid;
     private Context context;
     private ArrayList<Location> locations;
@@ -33,6 +33,8 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
         locations = aLocations;
 
     }
+
+    // define callback
     public interface Callback {
         void postedLocations(ArrayList<Location> LocationArraylist);
         void postedLocationsError(String message);
@@ -43,13 +45,12 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
         callback.postedLocationsError(error.getMessage());
     }
 
+    // onResponse, transcribe the JSONobject retreived from the database to a ArrayList of locations.
     @Override
     public void onResponse(Object response){
-        Log.d("waw", "onResponse: " + response);
         ArrayList<Location> locationArrayList = new ArrayList<>();
+
         try {
-
-
             JSONObject responseJson = new JSONObject(response.toString());
 
             String json = responseJson.getString("location");
@@ -62,10 +63,6 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
                 String description = onelocation.getString("description");
                 Location location = new Location(latitude, longitude, name, description);
                 locationArrayList.add(location);
-
-                String locOnderdeel = onelocation.getString("description");
-                Log.d("waw", "onResponse: " + locOnderdeel );
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -73,9 +70,7 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
         callback.postedLocations(locationArrayList);
     }
 
-
-
-
+    // the actual request to override the old location data with the new one in the database.
     private class ActualPostRequest extends StringRequest {
 
         public ActualPostRequest(int method, String url, LocationPutRequest listener, LocationPutRequest errorListener) {
@@ -83,6 +78,7 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
             super(method, url, listener, errorListener);
         }
 
+        // define the locationslist that has to be uploaded
         @Override
         protected Map<String, String> getParams () {
 
@@ -92,12 +88,13 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
         }
     }
 
+    // call the ActualPutRequest and add to the queue.
     public void postLocation(Callback activity) {
 
         callback = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
         int number = userid;
-        String url = "https://ide50-bart1997.c9users.io:8080/Maplife6/" + number;
+        String url = "https://ide50-bart1997.c9users.io:8080/Maplife7/" + number;
         ActualPostRequest postRequest = new ActualPostRequest(Request.Method.PUT, url, this, this);
         queue.add(postRequest);
     }

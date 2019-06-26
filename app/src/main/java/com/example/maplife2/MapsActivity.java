@@ -2,17 +2,10 @@ package com.example.maplife2;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -24,17 +17,15 @@ import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    // define global variable(s)
     private GoogleMap mMap;
-//    private User currentUser;
 
-
+    // set up layout and set a onmapreadylistener.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("map");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        Toast.makeText(this, "waw" + String.valueOf(MainActivity.currentUser), Toast.LENGTH_SHORT).show();
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -45,22 +36,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+     // This callback is triggered when the map is ready to be used.
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (MainActivity.currentUser != null) {
             ArrayList<Location> locationlist = MainActivity.currentUser.getLocations();
-            Toast.makeText(this, "waw" + String.valueOf(locationlist), Toast.LENGTH_SHORT).show();
 
+            // add markers to the map for all the saved locations and set an onMarkerClickListener.
             for (int i = 0; i < locationlist.size(); i++) {
                 Location location = locationlist.get(i);
                 LatLng thislocation = new LatLng(Double.valueOf(location.getLatitude()), Double.valueOf(location.getLongitude()));
@@ -71,12 +54,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    // calls showLocationInfo();
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        // Retrieve the data from the marker.
-        Integer clickCount = (Integer) marker.getTag();
-        Toast.makeText(this, marker.getTitle() + " has been clicked " + clickCount + " times.", Toast.LENGTH_SHORT).show();
         showLocationInfo();
 
         // Return false to indicate that we have not consumed the event and that we wish
@@ -85,10 +66,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
     }
 
+    // show alertdialog with info about the place.
     public void showLocationInfo() {
-        // Create alertDialog with a textEdit for user to give his name.
 
-
+        // Create alertDialog with info about the place
         AlertDialog.Builder giveInfo = new AlertDialog.Builder(MapsActivity.this);
 
         giveInfo.setTitle("Place Info")

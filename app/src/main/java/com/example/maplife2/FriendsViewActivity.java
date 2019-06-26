@@ -15,9 +15,11 @@ import java.util.ArrayList;
 
 public class FriendsViewActivity extends AppCompatActivity {
 
+    // define global variables
     int userID = 0;
     ArrayList<Friend> friends = new ArrayList<>();
 
+    // Get info from intent, call the friendsadapter and start the layout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("FriendsList");
@@ -28,6 +30,8 @@ public class FriendsViewActivity extends AppCompatActivity {
         userID = (int) intent.getSerializableExtra("id");
         String jsonified = intent.getStringExtra("friends");
 
+        // transcribe friends in JSON format to friends in usable friend format and
+        // fill Arraylist of Friends.
         try {
             JSONArray JSONfriend = new JSONArray(jsonified);
 
@@ -38,30 +42,32 @@ public class FriendsViewActivity extends AppCompatActivity {
                         friendobject.getInt("id"),
                         friendobject.getString("name")
                 );
-
                 friends.add(friend);
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        // create friendsadapter and set on gridview.
         FriendsAdapter adapter = new FriendsAdapter(this, R.layout.friend_grid_item, friends);
-        GridView grid_view = findViewById(R.id.gridview);
-        grid_view.setAdapter(adapter);
+        GridView gridview = findViewById(R.id.gridview);
+        gridview.setAdapter(adapter);
 
+        // set clicklistener on gridview.
         FriendsViewActivity.GridItemClickListener onclick = new FriendsViewActivity.GridItemClickListener();
-        grid_view.setOnItemClickListener(onclick);
+        gridview.setOnItemClickListener(onclick);
     }
 
+    // define onclick of floatingactionbutton to redirect to AddFriendsActivity
+    // including the necessary information.
     public void floatingbuttonOnClick(View view) {
         Intent intent = new Intent(FriendsViewActivity.this, AddFriendsActivity.class);
         intent.putExtra("friends", friends.toString());
         intent.putExtra("id", userID);
         startActivity(intent);
-
     }
 
+    // define onbackpresssed to always go to MainActivity.
     public void onBackPressed() {
         Intent intent = new Intent(FriendsViewActivity.this, MainActivity.class);
         intent.putExtra("loggedinID", userID);
@@ -69,6 +75,7 @@ public class FriendsViewActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // this method opens the friendsmapactivity of a friend when that particular friend is clicked.
     private class GridItemClickListener implements AdapterView.OnItemClickListener {
 
         @Override
@@ -79,5 +86,4 @@ public class FriendsViewActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 }

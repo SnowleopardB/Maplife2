@@ -8,20 +8,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class SigninActivity extends AppCompatActivity implements UserPostRequest.Callback, UserGetRequestbyEmail.Callback {
+public class SigninActivity extends AppCompatActivity implements UserPostRequest.Callback, IdGetRequestbyEmail.Callback {
 
+    // define global variables
     String emailString;
     int checker = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTitle("Login");
+        setTitle("Register");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
     }
 
+    // define onCLicklistener on Register button.
     public void signInClick(View view) {
         EditText name = findViewById(R.id.userName);
         EditText email = findViewById(R.id.email);
@@ -34,21 +35,9 @@ public class SigninActivity extends AppCompatActivity implements UserPostRequest
         String passwordcheckString = String.valueOf(passwordCheck.getText());
 
         ArrayList<Location> locationlist = new ArrayList<>();
-//        Location loc = new Location("1", "2", "hoi", "leuk");
-//        Location loc2 = new Location("3", "4", "hoi2", "leuk2");
-
-//        locationlist.add(loc);
-//        locationlist.add(loc2);
-
         ArrayList<Friend> friendslist = new ArrayList<>();
-//        Friend friend1= new Friend(1, "bart");
-//        Friend friend2 = new Friend(2, "Jan");
-//
-//        friendslist.add(friend1);
-//        friendslist.add(friend2);
 
-
-
+        // Check if password and check password are the same. Then call postUser.
         if (passwordString.equals(passwordcheckString)) {
             postUser(nameString, emailString, passwordString, locationlist, friendslist);
         } else {
@@ -56,27 +45,29 @@ public class SigninActivity extends AppCompatActivity implements UserPostRequest
         }
     }
 
+    // calls the postRequest helper for a new request.
     public void postUser(String name, String email, String password, ArrayList<Location> locationlist, ArrayList<Friend> friendslist) {
         UserPostRequest request = new UserPostRequest(this, name, email, password, locationlist, friendslist);
         request.postUser(this);
     }
 
+    // When the userdata has succesfully been added to the database, call the
+    // usergetrequesthelperbyemail to retreive the users id.
     @Override
-    public void postedScore() {
-
-        UserGetRequestbyEmail req = new UserGetRequestbyEmail(this, emailString);
+    public void postedUser() {
+        IdGetRequestbyEmail req = new IdGetRequestbyEmail(this, emailString);
         req.getUser(this);
     }
 
+    // show message when something went wrong with the server.
     @Override
-    public void postedScoreError(String message) {
-        Toast.makeText(this, "Signup failed", Toast.LENGTH_SHORT).show();
+    public void postedUserError(String message) {
+        Toast.makeText(this, "Could not connect to the server" +
+                ", try another time.", Toast.LENGTH_SHORT).show();
     }
 
-    public void onBackPressed() {
-        // Not able to go back after login
-    }
-
+    // when the ID of the user has successfully been downloaded, make new intent to MainActivity
+    // and include all the necessary information.
     @Override
     public void gotId(int id) {
         if (id != 0) {
@@ -88,8 +79,10 @@ public class SigninActivity extends AppCompatActivity implements UserPostRequest
         startActivity(loginIntent);
     }
 
+    // post errormessage when something went wrong with the server.
     @Override
     public void gotIdError(String message) {
-
+        Toast.makeText(this, "Could not connect to the server" +
+                ", try another time.", Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,7 +1,6 @@
 package com.example.maplife2;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -20,22 +19,23 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
     private Context context2;
     private Callback callback2;
 
-    public static final String TAG = "LocationRequest";
-
     public UserGetRequest(Context context, int userID) {
+
         context2 = context;
     }
 
+    // method that makes new jsonObjectRequest and puts it in the queue.
     public void getUser(Callback activity, int userID) {
 
         callback2 = activity;
         String number = String.valueOf(userID);
-        String url = "https://ide50-bart1997.legacy.cs50.io:8080/Maplife6/" +number;
+        String url = "https://ide50-bart1997.legacy.cs50.io:8080/Maplife7/" +number;
         RequestQueue queue = Volley.newRequestQueue(context2);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, this, this);
         queue.add(jsonObjectRequest);
     }
 
+    // define callback
     public interface Callback {
         void gotUser(User user);
         void gotUserError(String message);
@@ -48,10 +48,10 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
         callback2.gotUserError(errorMessage);
     }
 
+    // onResponse, transcribe the JSONObject in the response to a more usable datatype:
+    // A User object.
     @Override
     public void onResponse(JSONObject response) {
-
-        Log.d(TAG, "onResponse: " + response);
 
         ArrayList<Location> locationsarraylist = new ArrayList<>();
         ArrayList<Friend> friendsarraylist = new ArrayList<>();
@@ -74,7 +74,6 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
                         location.getString("name"),
                         location.getString("description")
                 );
-
                 locationsarraylist.add(loc);
             }
 
@@ -88,18 +87,12 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
                         friendobject.getInt("id"),
                         friendobject.getString("name")
                 );
-
                 friendsarraylist.add(friend);
             }
-
-
             User user = new User(ID, email, name, password, locationsarraylist, friendsarraylist);
             callback2.gotUser(user);
-            Log.d(TAG, "currentuser " + user);
-
 
         } catch (JSONException e) {
-            Log.d(TAG, "whoops, something went wrong" + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -9,6 +9,8 @@ public class Location implements Serializable {
     private String name;
     private String description;
 
+    // toString override method to transfer a Friend in a String object for
+    // easy transcription to JSON objects and transfer through intents.
     @Override
     public String toString() {
 
@@ -21,7 +23,6 @@ public class Location implements Serializable {
                 "\"" + name + "\"," +
                 "\"description\":" +
                 "\"" + description + "\"" + "}";
-
     }
 
     public Location(String latitude, String longitude, String name, String description) {

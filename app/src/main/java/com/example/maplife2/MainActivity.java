@@ -1,5 +1,7 @@
 package com.example.maplife2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,18 +13,28 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements UserGetRequest.Callback, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements UserGetRequest.Callback, NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    // define global variables
+    private GoogleMap mMap;
     int userID = 1;
     int logginCheck = 0;
     public static User currentUser;
     private DrawerLayout drawer;
 
-
+    // set up layout, define the drawer and set values and listeners.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,19 +47,24 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
         navigationView.setNavigationItemSelectedListener(this);
         setSupportActionBar(toolbar);
 
+        // setListener on weather the drawer is open or closed.
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // get useful information from intent
         Intent intent = getIntent();
         userID = (int) intent.getSerializableExtra("loggedinID");
         logginCheck = (int) intent.getSerializableExtra("loggedinCheck");
-        Log.d("userID", String.valueOf(userID));
+
+        // if not loggedin, go to LoginActivity
         if (logginCheck != 1) {
             Intent noLoginIntent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(noLoginIntent);
         }
+        // otherwise, ask the getrequestHelper for all the information about the user with
+        // current userID.
         UserGetRequest req = new UserGetRequest( this, userID);
         req.getUser(MainActivity.this, userID);
     }
@@ -56,29 +73,42 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-        //do nothing
+        //do nothing, we dont want to go back further than mainActivity.
         }
     }
 
+    // when User info has succesfully downloaded, set values and the onmapreadylistener.
     @Override
     public void gotUser(User user) {
         currentUser = user;
-        Log.d("currentuser", "currentuser: " + currentUser);
         if (currentUser == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         }
+        TextView userName = findViewById(R.id.textViewNameHeader);
+        TextView email = findViewById(R.id.textViewEmailHeader);
+        userName.setText(currentUser.getName());
+        email.setText(currentUser.getEmail());
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
+    // When the user has not downloaded, show message.
     @Override
     public void gotUserError(String message) {
-
+        Toast.makeText(getApplicationContext(), "something went wrong loading your info" +
+                ", try again later", Toast.LENGTH_LONG)
+                .show();
     }
 
+    // a switch case method that finds the Clicked item by its ID and then makes an intent
+    // to the right activity with the necessary information.
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        Log.d("huh", "onNavigationItemSelected: " + currentUser.getFriends().toString());
         switch (menuItem.getItemId()) {
             case R.id.nav_friends:
                 Intent intent = new Intent(MainActivity.this, FriendsViewActivity.class);
@@ -89,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
                 break;
             case R.id.nav_location:
                 Intent intentmap = new Intent(MainActivity.this, MapsActivity.class);
-//        intent.putExtra("user", currentUser);
                 startActivity(intentmap);
                 break;
             case R.id.nav_logout:
@@ -111,4 +140,54 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
         }
         return true;
     }
+
+    // when the map is ready, isolate the locationlist from userdata and add markers
+    // to the map.
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if (currentUser != null) {
+            ArrayList<Location> locationlist = currentUser.getLocations();
+            for (int i = 0; i < locationlist.size(); i++) {
+                Location location = locationlist.get(i);
+                LatLng thislocation = new LatLng(Double.valueOf(location.getLatitude()), Double.valueOf(location.getLongitude()));
+                MarkerOptions marker = new MarkerOptions().position(thislocation).title(location.getName());
+                mMap.addMarker(marker);
+            }
+            // Set onmarkerClickListener on the map.
+            mMap.setOnMarkerClickListener(this);
+        }
+    }
+
+    // onmarkerClicklistner, that calls showLocationInfo.
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        String title = marker.getTitle();
+        showLocationInfo(title);
+
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
+    }
+
+    // when called, this method shows an alertdialog with information about the clickedmarker.
+    public void showLocationInfo(final String aTitle) {
+        AlertDialog.Builder giveInfo = new AlertDialog.Builder(MainActivity.this);
+
+        giveInfo.setTitle(aTitle)
+                .setView(R.layout.dialog_location_view)
+                .setCancelable(false);
+
+        giveInfo.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+        giveInfo.show();
+       }
 }

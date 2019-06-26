@@ -3,11 +3,14 @@ package com.example.maplife2;
 
 import java.io.Serializable;
 
+// A friend class to easily safe friends as friend objects with atributes: id and name.
 public class Friend implements Serializable {
 
     private int id;
     private String name;
 
+    // toString override method to transfer a Friend in a String object for
+    // easy transcription to JSON objects and transfer through intents.
     @Override
     public String toString() {
 

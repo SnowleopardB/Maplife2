@@ -25,10 +25,11 @@ public class UserPostRequest implements Response.Listener, Response.ErrorListene
     private Context context;
     private Callback callback;
 
+    //define Callback
     public interface Callback {
 
-        void postedScore();
-        void postedScoreError(String message);
+        void postedUser();
+        void postedUserError(String message);
     }
 
     public UserPostRequest(SigninActivity aContext, String aName, String aEmail, String aPassword, ArrayList<Location> aLocations, ArrayList<Friend> aFriends) {
@@ -38,21 +39,21 @@ public class UserPostRequest implements Response.Listener, Response.ErrorListene
         password = aPassword;
         locations = aLocations;
         friends = aFriends;
-
         context = (Context) aContext;
-
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        callback.postedScoreError(error.getMessage());
+        callback.postedUserError(error.getMessage());
     }
 
     @Override
     public void onResponse(Object response) {
-        callback.postedScore();
+
+        callback.postedUser();
     }
 
+    // This is the actual PostRequest. It adds a user object to the old user data in the database.
     private class PostRequest extends StringRequest {
 
         public PostRequest(int method, String url, UserPostRequest listener, UserPostRequest errorListener) {
@@ -73,11 +74,12 @@ public class UserPostRequest implements Response.Listener, Response.ErrorListene
         }
     }
 
+    // method adds a new postRequst to the queue.
     public void postUser(Callback activity) {
 
         callback = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "https://ide50-bart1997.c9users.io:8080/Maplife6";
+        String url = "https://ide50-bart1997.c9users.io:8080/Maplife7";
         PostRequest postRequest = new PostRequest(Request.Method.POST, url, this, this);
         queue.add(postRequest);
     }
