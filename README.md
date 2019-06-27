@@ -7,7 +7,16 @@ The philosophy of this app is to safe the best places in your life for yourself 
 your friends. The app uses a Rester Database to hold information and a google maps API to
 show the places on the map. 
 
-pictures here!
+![Login Activity](LoginActivity.jpg)
+![Register Activity](RegisterActivity.jpg)
+![Main Activity](MainActivity.jpg)
+![DrawerLayout](DrawerLayout.jpg)
+![Add Location](AddLocationActivity.jpg)
+![Add Friends](AddFriendActivity.jpg)
+![Your Friends](FriendsList.jpg)
+![A Friends Map](FriendsMap.jpg)
+![A friends location](FriendsMapView.jpg)
+
 
 ## sources
 
