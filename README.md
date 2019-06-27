@@ -22,7 +22,7 @@ show the places on the map.
 
 https://stackoverflow.com/
 
-## MIT License 
+## License 
 
 Copyright (c) 2019 Bart-Jan Akerboom
 
