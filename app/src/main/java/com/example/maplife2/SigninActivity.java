@@ -56,7 +56,7 @@ public class SigninActivity extends AppCompatActivity implements UserPostRequest
     @Override
     public void postedUser() {
         IdGetRequestbyEmail req = new IdGetRequestbyEmail(this, emailString);
-        req.getUser(this);
+        req.getId(this);
     }
 
     // show message when something went wrong with the server.

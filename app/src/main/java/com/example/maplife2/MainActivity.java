@@ -1,5 +1,6 @@
 package com.example.maplife2;
 
+import android.accounts.Account;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,8 +65,10 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
         }
         // otherwise, ask the getrequestHelper for all the information about the user with
         // current userID.
-        UserGetRequest req = new UserGetRequest( this, userID);
-        req.getUser(MainActivity.this, userID);
+        else {
+            UserGetRequest req = new UserGetRequest(this, userID);
+            req.getUser(MainActivity.this, userID);
+        }
     }
 
     public void onBackPressed() {
@@ -136,6 +139,11 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
                 intentaddfriend.putExtra("id", userID);
                 startActivity(intentaddfriend);
                 break;
+            case R.id.nav_account:
+                Intent intentAccount = new Intent(MainActivity.this, AccountActivity.class);
+                intentAccount.putExtra("name", currentUser.getName());
+                intentAccount.putExtra("email", currentUser.getEmail());
+                startActivity(intentAccount);
         }
         return true;
     }
