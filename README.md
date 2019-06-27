@@ -17,7 +17,7 @@ show the places on the map.
 ![A Friends Map](FriendsMap.jpg)
 ![A friends location](FriendsMapView.jpg)
 
-Demo video: asdfasdf
+Demo video: https://youtu.be/OMNV_ZB0Ntk
 
 ## sources
 
