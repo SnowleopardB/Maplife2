@@ -1,3 +1,3 @@
 # Design Document
 
-![End design](endDesign.png)
+![End design](DesignFirstDraft.png)
