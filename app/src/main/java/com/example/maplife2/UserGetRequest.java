@@ -29,7 +29,7 @@ public class UserGetRequest implements Response.Listener<JSONObject>, Response.E
 
         callback2 = activity;
         String number = String.valueOf(userID);
-        String url = "https://ide50-bart1997.legacy.cs50.io:8080/Maplife7/" +number;
+        String url = "https://ide50-bart1997.legacy.cs50.io:8080/Maplife8/" +number;
         RequestQueue queue = Volley.newRequestQueue(context2);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, this, this);
         queue.add(jsonObjectRequest);

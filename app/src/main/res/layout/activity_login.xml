@@ -7,6 +7,12 @@
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="name: " />
+
     <EditText
         android:id="@+id/userNameText"
         android:layout_width="match_parent"
@@ -14,6 +20,12 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Username" />
+
+    <TextView
+        android:id="@+id/textViewPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="password: " />
 
     <EditText
         android:id="@+id/passwordText"

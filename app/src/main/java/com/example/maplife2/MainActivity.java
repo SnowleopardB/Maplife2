@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -118,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
                 startActivity(intent);
                 break;
             case R.id.nav_location:
-                Intent intentmap = new Intent(MainActivity.this, MapsActivity.class);
+                Intent intentmap = new Intent(MainActivity.this, LocationViewActivity.class);
                 startActivity(intentmap);
                 break;
             case R.id.nav_logout:
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
             for (int i = 0; i < locationlist.size(); i++) {
                 Location location = locationlist.get(i);
                 LatLng thislocation = new LatLng(Double.valueOf(location.getLatitude()), Double.valueOf(location.getLongitude()));
-                MarkerOptions marker = new MarkerOptions().position(thislocation).title(location.getName());
+                MarkerOptions marker = new MarkerOptions().position(thislocation).title(location.getName()).snippet(location.getDescription());
                 mMap.addMarker(marker);
             }
             // Set onmarkerClickListener on the map.
@@ -164,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
     public boolean onMarkerClick(Marker marker) {
 
         String title = marker.getTitle();
-        showLocationInfo(title);
+        showLocationInfo(marker.getTitle(), marker.getSnippet());
 
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
@@ -173,21 +172,21 @@ public class MainActivity extends AppCompatActivity implements UserGetRequest.Ca
     }
 
     // when called, this method shows an alertdialog with information about the clickedmarker.
-    public void showLocationInfo(final String aTitle) {
+    public void showLocationInfo(String title, String snippet) {
+        // Create alertDialog with info about the place
         AlertDialog.Builder giveInfo = new AlertDialog.Builder(MainActivity.this);
 
-        giveInfo.setTitle(aTitle)
-                .setView(R.layout.dialog_location_view)
+        giveInfo.setTitle(title)
+                .setMessage(snippet)
                 .setCancelable(false);
 
-        giveInfo.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+        giveInfo.setPositiveButton("Back", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 dialog.dismiss();
             }
         });
         giveInfo.show();
-       }
+    }
 }

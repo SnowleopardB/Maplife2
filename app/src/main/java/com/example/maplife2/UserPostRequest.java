@@ -79,7 +79,7 @@ public class UserPostRequest implements Response.Listener, Response.ErrorListene
 
         callback = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "https://ide50-bart1997.c9users.io:8080/Maplife7";
+        String url = "https://ide50-bart1997.c9users.io:8080/Maplife8";
         PostRequest postRequest = new PostRequest(Request.Method.POST, url, this, this);
         queue.add(postRequest);
     }

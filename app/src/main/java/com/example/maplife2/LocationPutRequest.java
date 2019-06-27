@@ -94,7 +94,7 @@ public class LocationPutRequest implements Response.Listener, Response.ErrorList
         callback = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
         int number = userid;
-        String url = "https://ide50-bart1997.c9users.io:8080/Maplife7/" + number;
+        String url = "https://ide50-bart1997.c9users.io:8080/Maplife8/" + number;
         ActualPostRequest postRequest = new ActualPostRequest(Request.Method.PUT, url, this, this);
         queue.add(postRequest);
     }

@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class LocationViewActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     // define global variable(s)
     private GoogleMap mMap;
@@ -47,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             for (int i = 0; i < locationlist.size(); i++) {
                 Location location = locationlist.get(i);
                 LatLng thislocation = new LatLng(Double.valueOf(location.getLatitude()), Double.valueOf(location.getLongitude()));
-                MarkerOptions marker = new MarkerOptions().position(thislocation).title(location.getName());
+                MarkerOptions marker = new MarkerOptions().position(thislocation).title(location.getName()).snippet(location.getDescription());
                 mMap.addMarker(marker);
             }
             mMap.setOnMarkerClickListener(this);
@@ -58,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        showLocationInfo();
+        showLocationInfo(marker.getTitle(), marker.getSnippet());
 
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
@@ -67,26 +67,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     // show alertdialog with info about the place.
-    public void showLocationInfo() {
+    public void showLocationInfo(String title, String snippet) {
 
         // Create alertDialog with info about the place
-        AlertDialog.Builder giveInfo = new AlertDialog.Builder(MapsActivity.this);
+        AlertDialog.Builder giveInfo = new AlertDialog.Builder(LocationViewActivity.this);
 
-        giveInfo.setTitle("Place Info")
-                .setView(R.layout.dialog_location_view)
+        giveInfo.setTitle(title)
+                .setMessage(snippet)
                 .setCancelable(false);
 
         giveInfo.setPositiveButton("Back", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                TextView name = findViewById(R.id.nameText);
-                TextView description = findViewById(R.id.descriptionText);
-                TextView user = findViewById(R.id.userText);
-                name.setText("waw");
-                description.setText("waw2");
-                user.setText("waw3");
+                dialog.dismiss();
             }
         });
         giveInfo.show();
